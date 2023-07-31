@@ -1,15 +1,43 @@
 package springboot.controllers;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import springboot.dataTransferObjects.Person;
+
+import java.util.Arrays;
+import java.util.List;
 
 @RestController //--> @Controller and @ResponseBody
 public class HelloController {
-    @RequestMapping("/hello") //GET, POST
-    public String hello(){
-        return "Hello";
+    @GetMapping(path = "/hello/{name}") // RequestMethod by default is GET
+    public String hello(@PathVariable String name) {
+        return "Hello " + name + "!";
     }
 
+    @PostMapping(path = "/goodbye")
+    public String goodbye(@RequestBody Person person) {
+        return "Goodbye, " + person.getName() + "!";
+    }
+
+    @GetMapping(path = "/get")
+    public Person getPerson() {
+        Person p = new Person();
+        p.setName("Bill");
+        return p;
+    }
+
+    @GetMapping(path = "/getAll")
+    public List<Person> getAllPersons() {
+        Person p = new Person();
+        Person p1 = new Person();
+        p.setName("Bill");
+        p1.setName("John");
+        return Arrays.asList(p, p1);
+    }
+
+    @GetMapping(path ="/statusTest")
+    public void statusTest(HttpServletResponse response){
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
 }
